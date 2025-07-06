@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": {"model": "modattempts:models/block2"}
+    "": { "model": "modattempt:block/block2" }
   }
 }
