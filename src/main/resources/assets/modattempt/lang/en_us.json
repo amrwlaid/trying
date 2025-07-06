@@ -4,6 +4,7 @@
 
     "itemgroup.modattempt" : "modattempt",
 
-    "block.modattempt.something_block" : "Something Block"
+    "block.modattempt.something_block" : "Something Block",
+    "block.modattempt.block2": "block2"
 
 }

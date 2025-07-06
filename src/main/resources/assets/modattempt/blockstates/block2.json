@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": {"model": "modattempts:models/block2"}
+  }
+}
