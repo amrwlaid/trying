@@ -1,0 +1,9 @@
+{
+    "item.modattempt.ruby" : "Ruby",
+    "item.modattempt.something" : "Something",
+
+    "itemgroup.modattempt" : "modattempt",
+
+    "block.modattempt.something_block" : "Something Block"
+
+}

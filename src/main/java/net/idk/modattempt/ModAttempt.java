@@ -2,7 +2,9 @@ package net.idk.modattempt;
 
 import net.fabricmc.api.ModInitializer;
 
-import net.idk.modattempt.modItems.ModItems;
+import net.idk.modattempt.Items.ModItemGroups;
+import net.idk.modattempt.Items.ModItems;
+import net.idk.modattempt.block.ModBlocks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +17,13 @@ public class ModAttempt implements ModInitializer {
 	@Override
 	public void onInitialize() {
 
+
+		ModItemGroups.registerItemGroups();
+
+		ModBlocks.registerModBlocks();
+
 		ModItems.registerModItems();
+
 		LOGGER.info("Hello Fabric world!");
 	}
 }

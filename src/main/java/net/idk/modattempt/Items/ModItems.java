@@ -1,4 +1,4 @@
-package net.idk.modattempt.modItems;
+package net.idk.modattempt.Items;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
@@ -11,10 +11,12 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
 public class ModItems {
-    public static final Item Ruby = registerItem("ruby", new Item(new FabricItemSettings()));
+    public static final Item RUBY = registerItem("ruby", new Item(new FabricItemSettings()));
+    public static final Item something = registerItem("something", new Item(new FabricItemSettings()));
 
     private static void addItemsToIngredientItemGroup(FabricItemGroupEntries entries){
-        entries.add(Ruby);
+        entries.add(RUBY);
+        entries.add(something);
     }
 
     private static Item registerItem(String name, Item item) {
