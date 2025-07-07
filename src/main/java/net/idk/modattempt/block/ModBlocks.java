@@ -12,6 +12,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
+
+
 public class ModBlocks {
         public static final PillarBlock something_block = registerPillarBlock("something_block",
                 new PillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_LOG).hardness(Blocks.IRON_BLOCK.getHardness())));
