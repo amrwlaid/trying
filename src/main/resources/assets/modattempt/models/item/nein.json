@@ -1,0 +1,6 @@
+{
+  "parent" : "item/generated",
+  "textures" : {
+    "layer0": "modattempt:item/nein_block"
+  }
+}

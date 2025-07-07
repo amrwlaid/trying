@@ -1,10 +1,11 @@
 {
     "item.modattempt.ruby" : "Ruby",
     "item.modattempt.something" : "Something",
+    "item.modattempt.nein" : "NEIN",
 
     "itemgroup.modattempt" : "modattempt",
 
     "block.modattempt.something_block" : "Something Block",
-    "block.modattempt.block2": "block2"
+    "block.modattempt.nein_block": "NEEEEIIIIIIN"
 
 }

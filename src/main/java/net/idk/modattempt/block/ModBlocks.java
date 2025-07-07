@@ -16,8 +16,9 @@ public class ModBlocks {
         public static final PillarBlock something_block = registerPillarBlock("something_block",
                 new PillarBlock(FabricBlockSettings.copyOf(Blocks.OAK_LOG).hardness(Blocks.IRON_BLOCK.getHardness())));
 
-        public static final Block block2 = registerBlock("block2",
-                new Block(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).hardness(Blocks.OAK_LOG.getHardness())));
+
+        public static final Block NEIN_block = registerBlock("nein_block",
+                new Block(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK)));
 
     private static Block registerBlock(String name, Block block){
         registerBlockItem(name, block);

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "modattempt:nein_block"
+    }
+  ],
+  "result":
+  {
+    "item": "modattempt:nein",
+    "count": 9
+  }
+}
