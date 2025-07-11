@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "modattempt",
-	"version": "${version}",
+	"version": "1.0.1",
 	"name": "modattempt",
 	"description": "This is an attempt at making a minecraft mod",
 	"authors": [
@@ -17,9 +17,11 @@
 	"entrypoints": {
 		"main": [
 			"net.idk.modattempt.ModAttempt"
+
 		],
 		"client": [
-			"net.idk.modattempt.ModAttemptClient"
+			"net.idk.modattempt.ModAttemptClient",
+			"net.idk.modattempt.util.KeyInputHandler"
 		],
 		"fabric-datagen": [
 			"net.idk.modattempt.ModAttemptDataGenerator"

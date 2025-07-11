@@ -25,6 +25,9 @@ public class ModItemGroups {
 
                         entries.add(ModBlocks.something_block);
                         entries.add(ModBlocks.NEIN_block);
+                        //entries.add(ModBlocks.deepslate_something_ore);
+                        entries.add(ModBlocks.something_ore);
+                        //entries.add(ModItems.something_pickaxe);
 
 
 

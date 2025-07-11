@@ -27,6 +27,16 @@
       "rolls": 1,
       "entries": [
         {
+          "functions": [
+            {
+              "enchantment": "minecraft:fortune",
+              "formula": "minecraft:ore_drops",
+              "function": "minecraft:apply_bonus"
+            },
+            {
+              "function": "minecraft:explosion_decay"
+            }
+          ],
           "type": "minecraft:item",
           "name": "minecraft:dirt"
         }
@@ -54,7 +64,18 @@
     {
       "rolls": 1,
       "entries": [
+
         {
+          "functions": [
+            {
+              "enchantment": "minecraft:fortune",
+              "formula": "minecraft:ore_drops",
+              "function": "minecraft:apply_bonus"
+            },
+            {
+              "function": "minecraft:explosion_decay"
+            }
+          ],
           "type": "minecraft:item",
           "name": "modattempt:nein"
         }

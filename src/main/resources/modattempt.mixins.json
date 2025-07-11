@@ -3,7 +3,10 @@
 	"package": "net.idk.modattempt.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-		"ExampleMixin"
+		"ExampleMixin",
+		"mixinAttempt",
+		"mine_vein",
+		"explosion_when_flintAndSteal"
 	],
 	"injectors": {
 		"defaultRequire": 1

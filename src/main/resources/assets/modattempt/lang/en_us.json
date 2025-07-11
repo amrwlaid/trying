@@ -2,10 +2,11 @@
     "item.modattempt.ruby" : "Ruby",
     "item.modattempt.something" : "Something",
     "item.modattempt.nein" : "NEIN",
+    "item.modattempt.something_pickaxe": "something pickaxe",
 
     "itemgroup.modattempt" : "modattempt",
 
     "block.modattempt.something_block" : "Something Block",
-    "block.modattempt.nein_block": "NEEEEIIIIIIN"
-
+    "block.modattempt.nein_block": "NEEEEIIIIIIN",
+    "block.modattempt.something_ore" : "Something ore"
 }

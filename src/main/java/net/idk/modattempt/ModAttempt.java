@@ -5,6 +5,7 @@ import net.fabricmc.api.ModInitializer;
 import net.idk.modattempt.Items.ModItemGroups;
 import net.idk.modattempt.Items.ModItems;
 import net.idk.modattempt.block.ModBlocks;
+import net.idk.modattempt.util.ModNetworking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +17,7 @@ public class ModAttempt implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-
+		ModNetworking.registerC2SPackets();
 
 		ModItemGroups.registerItemGroups();
 
