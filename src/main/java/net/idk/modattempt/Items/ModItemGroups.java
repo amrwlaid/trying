@@ -29,6 +29,8 @@ public class ModItemGroups {
                         entries.add(ModBlocks.something_ore);
                         //entries.add(ModItems.something_pickaxe);
 
+                        entries.add(ModItems.udjustable_mine_area_pickaxe);
+
 
 
 

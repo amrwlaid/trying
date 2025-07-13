@@ -8,5 +8,8 @@
 
     "block.modattempt.something_block" : "Something Block",
     "block.modattempt.nein_block": "NEEEEIIIIIIN",
-    "block.modattempt.something_ore" : "Something ore"
+    "block.modattempt.something_ore" : "Something ore",
+
+    "item.modattempt.udjustable_mine_area_pickaxe" : "custom pickaxe"
+
 }
