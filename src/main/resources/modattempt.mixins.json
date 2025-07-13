@@ -6,6 +6,7 @@
 		"ExampleMixin",
 		"mixinAttempt",
 		"mine_vein",
+
 		"explosion_when_flintAndSteal"
 	],
 	"injectors": {
