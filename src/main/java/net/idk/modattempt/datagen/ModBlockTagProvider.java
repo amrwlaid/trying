@@ -5,8 +5,11 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.idk.modattempt.ModAttempt;
 import net.idk.modattempt.block.ModBlocks;
 import net.idk.modattempt.util.Modtags;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
+import net.minecraft.util.Identifier;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -23,7 +26,10 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.something_block)
                 .add(ModBlocks.something_ore)
                 .add(ModBlocks.NEIN_block);
-
+        getOrCreateTagBuilder(BlockTags.NEEDS_DIAMOND_TOOL)
+                .add(ModBlocks.NEIN_block);
+        getOrCreateTagBuilder(TagKey.of(RegistryKeys.BLOCK, new Identifier("fabric", "needs_tool_level_4")))
+                ;
 
 
     }

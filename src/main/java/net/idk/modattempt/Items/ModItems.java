@@ -8,27 +8,31 @@ import net.idk.modattempt.Items.custom.custom_PickaxeItem;
 import net.idk.modattempt.ModAttempt;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
-import net.minecraft.item.PickaxeItem;
+
 import net.minecraft.item.ToolMaterials;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.idk.modattempt.Items.custom.custom_ToolMaterial;
 
 public class ModItems {
     public static final Item RUBY = registerItem("ruby", new Item(new FabricItemSettings()));
     public static final Item something = registerItem("something", new Item(new FabricItemSettings()));
     public static final Item nein = registerItem("nein", new Item(new FabricItemSettings()));
     public static final custom_PickaxeItem udjustable_mine_area_pickaxe = registerCustom_PickaxeItem("udjustable_mine_area_pickaxe",
-            new custom_PickaxeItem(ToolMaterials.DIAMOND, 10,
+            new custom_PickaxeItem(ToolMaterials.DIAMOND, 1,
             -0.4f ,new  FabricItemSettings(), true));
+    //public static final Ingredient something =
 
-    /*public static final Custom_Item something_pickaxe = registerCustom_Item("something_pickaxe",
-            new Custom_Item(new FabricItemSettings().maxCount(1).maxDamage(10)));*/
+
 
     private static void addItemsToIngredientItemGroup(FabricItemGroupEntries entries){
         entries.add(RUBY);
     }
+
+   /* private static Ingredient registerCustom_Igredient(String name, Ingredient ingredient){
+        return Registry.register(Registries)
+    }*/
 
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registries.ITEM, new Identifier(ModAttempt.MOD_ID, name), item);

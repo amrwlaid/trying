@@ -4,6 +4,18 @@ import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
 
 public class custom_ToolMaterial implements ToolMaterial {
+    int durability;
+    float miningSpeedMultiplier;
+    float attackDamage;
+    int miningLevel;
+    int enchantability;
+    Ingredient RepairIngredient;
+
+    public custom_ToolMaterial(){
+
+    }
+
+
     @Override
     public int getDurability() {
         return 10000;
