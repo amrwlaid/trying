@@ -29,6 +29,10 @@ public class custom_PickaxeItem extends MiningToolItem {
     boolean extra_function;
     int width_of_area_toBeBroken = 3;
     int hight_of_area_toBeBroken = 3;
+    boolean increment;
+    int maxHeight = 9;
+    int maxWidth = 9;
+    static int DurabilityDamage = 1;
 
 
 
@@ -37,39 +41,97 @@ public class custom_PickaxeItem extends MiningToolItem {
         this.extra_function = extra_function;
     }
 
+    public static void resetDurabilityDamnage(){
+        DurabilityDamage = 1;
+    }
+
+    public int getMaxHeight(){
+        return this.maxHeight;
+    }
+
+    public int getMaxWidth(){
+        return this.maxWidth;
+    }
+
+    public boolean getExtraFunction(){
+        return this.extra_function;
+    }
+
+    public int getX(){
+        return width_of_area_toBeBroken;
+    }
+
+    public int getY(){
+        return hight_of_area_toBeBroken;
+    }
+
+    public boolean getIncrement(){
+        return increment;
+    }
+
     public void toggle_extra_function(){
         this.extra_function = !this.extra_function;
     }
 
-    public void increment_x(){
-        this.width_of_area_toBeBroken+=2;
+    public void toggleIncrement(){
+        this.increment = !this.increment;
     }
 
-    public void increment_y(){
-        this.hight_of_area_toBeBroken+=2;
+    public void change_x(){
+        if (this.width_of_area_toBeBroken == this.maxWidth && this.increment)
+            return;
+
+        if (this.width_of_area_toBeBroken <= 1 && !this.increment){
+            this.width_of_area_toBeBroken = 1;
+            return;
+        }
+
+        if (increment)
+            this.width_of_area_toBeBroken+=2;
+        else this.width_of_area_toBeBroken-=2;
     }
+
+    public void change_y(){
+        if (this.hight_of_area_toBeBroken == this.maxHeight && this.increment)
+            return;
+
+        if (this.hight_of_area_toBeBroken <= 1 && !this.increment){
+            this.hight_of_area_toBeBroken = 1;
+            return;
+        }
+
+        if (increment)
+            this.hight_of_area_toBeBroken += 2;
+        else this.hight_of_area_toBeBroken -= 2;
+    }
+
+
 
 
 
 
 
     public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
-        if (!world.isClient && state.getHardness(world, pos) != 0.0F) {
-            stack.damage(1, miner, e -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
-        }
         int x = this.width_of_area_toBeBroken;
         int y = this.hight_of_area_toBeBroken;
-
-
-        if (this.extra_function && !(x == 0) && !(y == 0)){
-            break_XbyY_Area(state, pos, world, stack, miner, x, y);
+        int durabilityDamage = 1;
+        if (!world.isClient && state.getHardness(world, pos) != 0.0F){
+            if (this.extra_function && !(x == 0) && !(y == 0)){
+                break_XbyY_Area(state, pos, world, stack, miner, x, y);
+                durabilityDamage = DurabilityDamage;
+                resetDurabilityDamnage();
+            }
+            stack.damage(durabilityDamage, miner, e -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
         }
+
+
 
         return true;
     }
 
-    public void break_XbyY_Area(BlockState state, BlockPos pos,  World world, ItemStack stack, LivingEntity miner, int x, int y){
+    public void break_XbyY_Area(BlockState state, BlockPos pos,  World world, ItemStack stack, LivingEntity miner, int x, int y) {
         Direction facing_Dir = Direction.getEntityFacingOrder(miner)[0];
+        Direction secondary_Facing_Dir = Direction.getEntityFacingOrder(miner)[1];
         Block referenceBlock = state.getBlock();
         int dx = 0;
         int dy = 0;
@@ -79,28 +141,29 @@ public class custom_PickaxeItem extends MiningToolItem {
         int max_dz = 0;
         System.out.println("inside break_XbyY_Area");
 
-
-
-        switch (facing_Dir){
-            case UP:
-            case DOWN: dx = -(x/2);
-            dz = -(y/2);
-            max_dx = x/2;
-            max_dz = y/2;
-            break;
-            case EAST:
-            case WEST: dz = -(x/2);
+        if ((facing_Dir == Direction.UP || facing_Dir == Direction.DOWN) && (secondary_Facing_Dir == Direction.SOUTH || secondary_Facing_Dir == Direction.NORTH)) {
+            dx = -(x / 2);
+            dz = -(y / 2);
+            max_dx = x / 2;
+            max_dz = y / 2;
+        } else if ((facing_Dir == Direction.UP || facing_Dir == Direction.DOWN) && (secondary_Facing_Dir == Direction.EAST || secondary_Facing_Dir == Direction.WEST)){
+            dx = -(y / 2);
+            dz = -(x / 2);
+            max_dx = y / 2;
+            max_dz = x / 2;
+        } else if (facing_Dir == Direction.EAST || facing_Dir == Direction.WEST) {
+            dz = -(x/2);
             dy = -(y/2);
             max_dz = x/2;
             max_dy = y/2;
-            break;
-            case NORTH:
-            case SOUTH: dx = -(x/2);
+        } else if (facing_Dir ==Direction.SOUTH || facing_Dir == Direction.NORTH) {
+            dx = -(x/2);
             dy = -(y/2);
             max_dx = x/2;
             max_dy = y/2;
-            break;
         }
+
+
 
         for (int i = dx; i <= max_dx; i++){
             for (int j = dy; j <= max_dy; j++){
@@ -113,6 +176,7 @@ public class custom_PickaxeItem extends MiningToolItem {
 
                         if (targetState.isOf(referenceBlock)) {
                             BlockEntity blockEntity = world.getBlockEntity(targetPos);
+                            DurabilityDamage++;
 
                             // LootContextParameterSet.Builder is what getDroppedStacks expects
                             LootContextParameterSet.Builder lootContextBuilder = new LootContextParameterSet.Builder(serverWorld)
