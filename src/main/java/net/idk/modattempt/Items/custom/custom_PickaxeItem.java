@@ -1,6 +1,7 @@
 package net.idk.modattempt.Items.custom;
 
 
+import net.idk.modattempt.Items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -15,8 +16,10 @@ import net.minecraft.item.ToolMaterial;
 import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -41,7 +44,7 @@ public class custom_PickaxeItem extends MiningToolItem {
         this.extra_function = extra_function;
     }
 
-    public static void resetDurabilityDamnage(){
+    public static void resetDurabilityDamage(){
         DurabilityDamage = 1;
     }
 
@@ -77,7 +80,7 @@ public class custom_PickaxeItem extends MiningToolItem {
         this.increment = !this.increment;
     }
 
-    public void change_x(){
+    public void change_x(ItemStack stack){
         if (this.width_of_area_toBeBroken == this.maxWidth && this.increment)
             return;
 
@@ -89,9 +92,40 @@ public class custom_PickaxeItem extends MiningToolItem {
         if (increment)
             this.width_of_area_toBeBroken+=2;
         else this.width_of_area_toBeBroken-=2;
+
+        stack.getOrCreateNbt().putInt("Dimension", getMaxDimension());
+
     }
 
-    public void change_y(){
+    public int getMaxDimension(){
+        return Math.max(this.hight_of_area_toBeBroken, this.width_of_area_toBeBroken);
+    }
+
+    @Override
+    public Text getName(ItemStack stack) {
+        NbtCompound nbt = stack.getOrCreateNbt();
+        int x = getMaxDimension();
+        Text result = Text.of("udjustable_mine_area_pickaxe1");
+
+        switch (x){
+            case 3: result = Text.of("udjustable_mine_area_pickaxe2");
+            break;
+            case 5: result = Text.of("udjustable_mine_area_pickaxe3");
+            break;
+            case 7: result = Text.of("udjustable_mine_area_pickaxe4");
+            break;
+            case 9: result = Text.of("udjustable_mine_area_pickaxe5");
+            break;
+            default: result = Text.of("udjustable_mine_area_pickaxe1");
+            break;
+        };
+        return result;
+    }
+
+    //String variantId = nbt.getString("Variant");
+
+
+    public void change_y(ItemStack stack){
         if (this.hight_of_area_toBeBroken == this.maxHeight && this.increment)
             return;
 
@@ -103,7 +137,11 @@ public class custom_PickaxeItem extends MiningToolItem {
         if (increment)
             this.hight_of_area_toBeBroken += 2;
         else this.hight_of_area_toBeBroken -= 2;
+
+        stack.getOrCreateNbt().putInt("Dimension", getMaxDimension());
     }
+
+
 
 
 
@@ -119,7 +157,7 @@ public class custom_PickaxeItem extends MiningToolItem {
             if (this.extra_function && !(x == 0) && !(y == 0)){
                 break_XbyY_Area(state, pos, world, stack, miner, x, y);
                 durabilityDamage = DurabilityDamage;
-                resetDurabilityDamnage();
+                resetDurabilityDamage();
             }
             stack.damage(durabilityDamage, miner, e -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
         }

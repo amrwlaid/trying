@@ -1,6 +1,24 @@
 {
-  "parent" : "item/handheld",
-  "textures" : {
-    "layer0": "modattempt:item/udjustable_mine_area_pickaxe"
-  }
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "modattempt:item/udjustable_mine_area_pickaxe1"
+  },
+  "overrides": [
+    {
+      "predicate": { "modattempt:variant": 0.3 },
+      "model": "modattempt:item/udjustable_mine_area_pickaxe2"
+    },
+    {
+      "predicate": { "modattempt:variant": 0.5 },
+      "model": "modattempt:item/udjustable_mine_area_pickaxe3"
+    },
+    {
+      "predicate": { "modattempt:variant": 0.7 },
+      "model": "modattempt:item/udjustable_mine_area_pickaxe4"
+    },
+    {
+      "predicate": { "modattempt:variant": 0.9 },
+      "model": "modattempt:item/udjustable_mine_area_pickaxe5"
+    }
+  ]
 }

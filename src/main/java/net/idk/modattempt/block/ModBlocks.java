@@ -23,6 +23,9 @@ public class ModBlocks {
         public static final Block something_ore = registerBlock("something_ore",
                 new ExperienceDroppingBlock(FabricBlockSettings.copyOf(Blocks.STONE).strength(0),
                         UniformIntProvider.create(10, 30)));
+
+        public static final Block minerBlock = registerBlock("auto_miner",
+                new Block(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK)));
         /*public static final Block deepslate_something_ore = registerBlock("something_ore",
                 new ExperienceDroppingBlock(FabricBlockSettings.copyOf(Blocks.DEEPSLATE).strength(4f),
                         UniformIntProvider.create(10, 30)));*/

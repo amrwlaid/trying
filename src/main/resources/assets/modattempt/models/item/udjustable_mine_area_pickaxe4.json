@@ -1,0 +1,6 @@
+{
+  "parent" : "item/handheld",
+  "textures" : {
+    "layer0": "modattempt:item/udjustable_mine_area_pickaxe4"
+  }
+}

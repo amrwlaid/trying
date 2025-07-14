@@ -17,6 +17,8 @@ public class ModAttempt implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+
+
 		ModNetworking.registerC2SPackets();
 
 		ModItemGroups.registerItemGroups();

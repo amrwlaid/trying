@@ -19,10 +19,10 @@ public class ModItems {
     public static final Item RUBY = registerItem("ruby", new Item(new FabricItemSettings()));
     public static final Item something = registerItem("something", new Item(new FabricItemSettings()));
     public static final Item nein = registerItem("nein", new Item(new FabricItemSettings()));
-    public static final custom_PickaxeItem udjustable_mine_area_pickaxe = registerCustom_PickaxeItem("udjustable_mine_area_pickaxe",
+    public static custom_PickaxeItem udjustable_mine_area_pickaxe = registerCustom_PickaxeItem("udjustable_mine_area_pickaxe",
             new custom_PickaxeItem(ToolMaterials.DIAMOND, 1,
             -0.4f ,new  FabricItemSettings(), true));
-    //public static final Ingredient something =
+
 
 
 

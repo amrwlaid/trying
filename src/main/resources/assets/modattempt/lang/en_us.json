@@ -10,6 +10,10 @@
     "block.modattempt.nein_block": "NEEEEIIIIIIN",
     "block.modattempt.something_ore" : "Something ore",
 
-    "item.modattempt.udjustable_mine_area_pickaxe" : "custom pickaxe"
+    "item.modattempt.udjustable_mine_area_pickaxe1" : "custom pickaxe1",
+    "item.modattempt.udjustable_mine_area_pickaxe2" : "custom pickaxe2",
+    "item.modattempt.udjustable_mine_area_pickaxe3" : "custom pickaxe3",
+    "item.modattempt.udjustable_mine_area_pickaxe4" : "custom pickaxe4",
+    "item.modattempt.udjustable_mine_area_pickaxe5" : "custom pickaxe5"
 
 }

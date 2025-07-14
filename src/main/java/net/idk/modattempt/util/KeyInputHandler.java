@@ -92,7 +92,7 @@ public class KeyInputHandler implements ClientModInitializer {
                     else increment = "now decreasing the dimensions";
                     client.player.sendMessage(Text.literal(increment),true);
                 }
-                while (changeXKey.wasPressed()){ pickaxe.change_x();
+                while (changeXKey.wasPressed()){ pickaxe.change_x(client.player.getMainHandStack());
 
                     xChanged = pickaxe.getX() +" x "+ pickaxe.getY();
 
@@ -103,7 +103,7 @@ public class KeyInputHandler implements ClientModInitializer {
 
                     client.player.sendMessage(Text.literal(xChanged),true);
                 }
-                while (changeYKey.wasPressed()){ pickaxe.change_y();
+                while (changeYKey.wasPressed()){ pickaxe.change_y(client.player.getMainHandStack());
 
                     yChanged = pickaxe.getX() +" x "+ pickaxe.getY();
 
