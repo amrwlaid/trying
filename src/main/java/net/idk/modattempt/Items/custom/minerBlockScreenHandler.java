@@ -21,13 +21,30 @@ public class minerBlockScreenHandler extends ScreenHandler {
         super(ModScreenHandlers.miner_block, syncId);
         this.inventory = inventory;
 
-        // Add inventory slots (9-slot in this example)
+        // Add the block's inventory slots (e.g. 9 slots in a single row)
         for (int i = 0; i < 9; i++) {
             this.addSlot(new Slot(inventory, i, 8 + i * 18, 18));
         }
 
-        // Add player inventory slots here
+        // Adjusted Y offset (original was 50)
+        int startX = 8;
+        int startY = 32; // Moved up by 18 pixels (1 slot height)
+
+        // Player inventory (3 rows of 9)
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 9; col++) {
+                this.addSlot(new Slot(playerInventory, col + row * 9 + 9, startX + col * 18, startY + row * 18));
+            }
+        }
+
+        // Hotbar (1 row of 9)
+        int hotbarY = startY + 58; // 3 rows * 18 + 4 padding = 54 + ~4
+        for (int col = 0; col < 9; col++) {
+            this.addSlot(new Slot(playerInventory, col, startX + col * 18, hotbarY));
+        }
     }
+
+
 
     /*public minerBlockScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
         super(ModScreenHandlers.miner_block, syncId);
