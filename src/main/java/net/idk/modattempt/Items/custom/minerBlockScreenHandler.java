@@ -4,11 +4,12 @@ import net.idk.modattempt.ModScreenHandlers;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.inventory.SimpleInventory;
@@ -21,28 +22,45 @@ public class minerBlockScreenHandler extends ScreenHandler {
         super(ModScreenHandlers.miner_block, syncId);
         this.inventory = inventory;
 
-        // Add the block's inventory slots (e.g. 9 slots in a single row)
-        for (int i = 0; i < 9; i++) {
-            this.addSlot(new Slot(inventory, i, 8 + i * 18, 18));
+        int startX = 8;
+        int startY = 18;
+        int slotSpacing = 18; // ← Reduced from 18
+        int slotIndex = 0;
+
+        // 3×7 grid (21 slots)
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 7; col++) {
+                this.addSlot(new Slot(inventory, slotIndex++, 1 + (startX + col * slotSpacing), startY + row * slotSpacing));
+            }
         }
 
-        // Adjusted Y offset (original was 50)
-        int startX = 8;
-        int startY = 32; // Moved up by 18 pixels (1 slot height)
+        // Isolated redstone-only slot
+        int isolatedX = startX + 7 * slotSpacing + 20; // moved accordingly
+        int isolatedY = startY + 1 * slotSpacing;
+        this.addSlot(new Slot(inventory, slotIndex++, isolatedX, isolatedY) {
+            @Override
+            public boolean canInsert(ItemStack stack) {
+                Item item = stack.getItem();
+                return item == Items.REDSTONE || item == Items.REDSTONE_BLOCK;
+            }
+        });
 
         // Player inventory (3 rows of 9)
+        int playerInvY = isolatedY + slotSpacing + 32;
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
-                this.addSlot(new Slot(playerInventory, col + row * 9 + 9, startX + col * 18, startY + row * 18));
+                this.addSlot(new Slot(playerInventory, col + row * 9 + 9, 1 + (startX + col * slotSpacing), playerInvY + row * slotSpacing));
             }
         }
 
         // Hotbar (1 row of 9)
-        int hotbarY = startY + 58; // 3 rows * 18 + 4 padding = 54 + ~4
+        int hotbarY = playerInvY + 3 * slotSpacing + 4;
         for (int col = 0; col < 9; col++) {
-            this.addSlot(new Slot(playerInventory, col, startX + col * 18, hotbarY));
+            this.addSlot(new Slot(playerInventory, col, (startX + col * slotSpacing) + 1, hotbarY));
         }
     }
+
+
 
 
 
@@ -67,7 +85,7 @@ public class minerBlockScreenHandler extends ScreenHandler {
 
 
     public minerBlockScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
-        this(syncId, playerInventory, new SimpleInventory(9)); // Replace with actual logic if needed
+        this(syncId, playerInventory, new SimpleInventory(22)); // Replace with actual logic if needed
         // Or if you're passing block pos from server:
         // BlockPos pos = buf.readBlockPos();
     }
@@ -83,7 +101,34 @@ public class minerBlockScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public ItemStack quickMove(PlayerEntity player, int slot) {
-        return null;
+    public ItemStack quickMove(PlayerEntity player, int index) {
+        ItemStack newStack = ItemStack.EMPTY;
+        Slot slot = this.slots.get(index);
+
+        if (slot != null && slot.hasStack()) {
+            ItemStack originalStack = slot.getStack();
+            newStack = originalStack.copy();
+
+            if (index < 22) {
+                // From block inventory → to player inventory
+                if (!this.insertItem(originalStack, 22, 58, true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else {
+                // From player inventory → to block inventory
+                if (!this.insertItem(originalStack, 0, 22, false)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+
+            if (originalStack.isEmpty()) {
+                slot.setStack(ItemStack.EMPTY);
+            } else {
+                slot.markDirty();
+            }
+        }
+
+        return newStack;
     }
+
 }

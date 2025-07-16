@@ -33,9 +33,9 @@ public class minerBlockScreen extends HandledScreen<minerBlockScreenHandler> {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        renderBackground(context);
+        this.renderBackground(context);
         super.render(context, mouseX, mouseY, delta);
-        drawMouseoverTooltip(context, mouseX, mouseY);
+        this.drawMouseoverTooltip(context, mouseX, mouseY);
     }
 }
 

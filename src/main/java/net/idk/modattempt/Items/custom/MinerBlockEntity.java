@@ -22,7 +22,8 @@ import net.idk.modattempt.Items.ModBlockEntities;
 import org.jetbrains.annotations.Nullable;
 
 public class MinerBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, Inventory {
-    private final DefaultedList<ItemStack> items = DefaultedList.ofSize(9, ItemStack.EMPTY);
+    private final DefaultedList<ItemStack> items = DefaultedList.ofSize(22, ItemStack.EMPTY);
+
 
     private int fuel = 0;
 
@@ -75,10 +76,11 @@ public class MinerBlockEntity extends BlockEntity implements ExtendedScreenHandl
     @Override
     public boolean isEmpty() {
         for (ItemStack stack : items) {
-            if (!stack.isEmpty()) return false;
+            if (stack != null)if (!stack.isEmpty()) return false;
         }
         return true;
     }
+
 
     @Override
     public ItemStack getStack(int slot) {
@@ -87,12 +89,14 @@ public class MinerBlockEntity extends BlockEntity implements ExtendedScreenHandl
     @Override
     public ItemStack removeStack(int slot, int amount) {
         ItemStack result = ItemStack.EMPTY;
-        if (!items.get(slot).isEmpty()) {
-            result = items.get(slot).split(amount);
-            if (items.get(slot).isEmpty()) {
-                items.set(slot, ItemStack.EMPTY);
+        if (!(items.get(slot) == null) && !(result == null)){
+            if (!items.get(slot).isEmpty()) {
+                result = items.get(slot).split(amount);
+                if (items.get(slot).isEmpty()) {
+                    items.set(slot, ItemStack.EMPTY);
+                }
+                markDirty();
             }
-            markDirty();
         }
         return result;
     }
@@ -102,8 +106,9 @@ public class MinerBlockEntity extends BlockEntity implements ExtendedScreenHandl
         if (slot < 0 || slot >= items.size()) return ItemStack.EMPTY;
 
         ItemStack stack = items.get(slot);
-        if (stack == null || stack.isEmpty()) {
-            return ItemStack.EMPTY;
+        if (stack == null) {
+            if (stack.isEmpty())
+                return ItemStack.EMPTY;
         }
 
         items.set(slot, ItemStack.EMPTY);
@@ -114,11 +119,13 @@ public class MinerBlockEntity extends BlockEntity implements ExtendedScreenHandl
 
     @Override
     public void setStack(int slot, ItemStack stack) {
+        if (!(stack == null)){
         items.set(slot, stack);
         if (stack.getCount() > getMaxCountPerStack()) {
             stack.setCount(getMaxCountPerStack());
         }
         markDirty();
+        }
     }
 
     @Override
