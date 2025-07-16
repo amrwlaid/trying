@@ -2,6 +2,7 @@ package net.idk.modattempt;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.idk.modattempt.Items.ModBlockEntities;
 import net.idk.modattempt.Items.ModItemGroups;
 import net.idk.modattempt.Items.ModItems;
 import net.idk.modattempt.block.ModBlocks;
@@ -17,7 +18,9 @@ public class ModAttempt implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		ModBlockEntities.register();
 
+		ModScreenHandlers.registerAllScreenHandlers();
 
 		ModNetworking.registerC2SPackets();
 

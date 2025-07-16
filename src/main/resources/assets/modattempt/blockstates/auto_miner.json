@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "modattempt:block/auto_miner" }
+  }
+}

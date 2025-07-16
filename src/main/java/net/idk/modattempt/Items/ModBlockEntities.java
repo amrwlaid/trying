@@ -9,12 +9,13 @@ import net.minecraft.util.Identifier;
 import net.idk.modattempt.block.ModBlocks;
 
 public class ModBlockEntities {
-    public static final BlockEntityType<MinerBlockEntity> MINER_BLOCK_ENTITY =
-            Registry.register(
-                    Registries.BLOCK_ENTITY_TYPE,
-                    new Identifier("modattempt", "minerblockEntity"),
-                    FabricBlockEntityTypeBuilder.create(MinerBlockEntity::new, ModBlocks.minerBlock).build(null)
-            );
+    public static  BlockEntityType<MinerBlockEntity> MINER_BLOCK_ENTITY;
 
-    public static void register() {}
+    public static void register() {
+        MINER_BLOCK_ENTITY = Registry.register(
+                Registries.BLOCK_ENTITY_TYPE,
+                new Identifier("modattempt", "minerblockentity"),
+                FabricBlockEntityTypeBuilder.create(MinerBlockEntity::new, ModBlocks.minerBlock).build(null)
+        );
+    }
 }

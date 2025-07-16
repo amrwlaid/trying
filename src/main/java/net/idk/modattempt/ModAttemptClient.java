@@ -2,6 +2,8 @@ package net.idk.modattempt;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.idk.modattempt.Items.ModItems;
+import net.idk.modattempt.Items.custom.minerBlockScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.util.Identifier;
 
@@ -24,6 +26,8 @@ public class ModAttemptClient implements ClientModInitializer {
                     };
                 }
         );
-
+        HandledScreens.register(ModScreenHandlers.miner_block, minerBlockScreen::new);
     }
+
+
 }

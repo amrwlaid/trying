@@ -28,8 +28,10 @@ public class ModItemGroups {
                         //entries.add(ModBlocks.deepslate_something_ore);
                         entries.add(ModBlocks.something_ore);
                         //entries.add(ModItems.something_pickaxe);
+                        entries.add(ModBlocks.minerBlock);
 
                         entries.add(ModItems.udjustable_mine_area_pickaxe);
+
 
 
 
