@@ -1,9 +1,11 @@
 package net.idk.modattempt.Items.custom;
 
 import net.idk.modattempt.ModScreenHandlers;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -41,7 +43,7 @@ public class minerBlockScreenHandler extends ScreenHandler {
             @Override
             public boolean canInsert(ItemStack stack) {
                 Item item = stack.getItem();
-                return item == Items.REDSTONE || item == Items.REDSTONE_BLOCK;
+                return item == Items.REDSTONE || item == Items.REDSTONE_BLOCK || item == Items.COAL || item == Blocks.COAL_BLOCK.asItem();
             }
         });
 

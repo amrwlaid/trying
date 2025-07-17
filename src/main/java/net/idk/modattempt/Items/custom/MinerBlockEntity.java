@@ -1,29 +1,45 @@
 package net.idk.modattempt.Items.custom;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+
+import net.idk.modattempt.block.ModBlocks;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+
+import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameterSet;
+import net.minecraft.loot.context.LootContextParameters;
+
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
+
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.idk.modattempt.Items.ModBlockEntities;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.chunk.Chunk;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
 
 public class MinerBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, Inventory {
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(22, ItemStack.EMPTY);
-
+    private boolean isDoneScanning = false;
+    private List<BlockPos> blocksToBreak = new ArrayList<>();
 
     private int fuel = 0;
 
@@ -31,8 +47,22 @@ public class MinerBlockEntity extends BlockEntity implements ExtendedScreenHandl
         super(ModBlockEntities.MINER_BLOCK_ENTITY, pos, state);
     }
 
-    public void addFuel(int amount) {
-        fuel += amount;
+    public void addFuel() {
+        ItemStack itemStack = items.get(21);
+        if (!itemStack.isEmpty()&& this.getFuel() < 1000){
+            if (itemStack.isOf(Blocks.REDSTONE_BLOCK.asItem()))fuel += 18;
+
+            else if (itemStack.isOf(Items.REDSTONE)) fuel+=2;
+
+            else if (itemStack.isOf(Items.COAL)) fuel+=1;
+
+            else if (itemStack.isOf(Blocks.COAL_BLOCK.asItem())) fuel+=9;
+
+
+
+            itemStack.decrement(1);
+        }
+
         markDirty();
     }
 
@@ -49,11 +79,152 @@ public class MinerBlockEntity extends BlockEntity implements ExtendedScreenHandl
         return fuel;
     }
 
+    @Override
+    protected void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
+        Inventories.writeNbt(nbt, items);
+        nbt.putInt("fuel", this.fuel);
+    }
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+
+        // Load inventory
+        Inventories.readNbt(nbt, items);
+
+        // Load your custom fields
+        this.fuel = nbt.getInt("fuel");
+    }
+
+    public DefaultedList<ItemStack> getItems(){
+        return this.items;
+    }
+
+
+
+
+
+
     public void tick(World world, BlockPos pos, BlockState state) {
-        if (!world.isClient && world.getTime() % 20 == 0 && this.fuel!=0) {
+        addFuel();
+
+        if (!world.isClient && world.getTime() % 20 == 0 && this.fuel>0 && world.isReceivingRedstonePower(pos) && isDoneScanning && !blocksToBreak.isEmpty()) {
             consumeFuel();
+            if (world instanceof ServerWorld serverWorld) {
+
+
+
+
+
+                if (!blocksToBreak.isEmpty()) {
+                    BlockPos next = blocksToBreak.remove(0);
+                    BlockState targetState = world.getBlockState(next);
+
+
+
+                    // Build the LootContextParameterSet
+                    LootContextParameterSet.Builder builder = new LootContextParameterSet.Builder((ServerWorld) world)
+                            .add(LootContextParameters.ORIGIN, Vec3d.ofCenter(pos))
+                            .add(LootContextParameters.TOOL, ItemStack.EMPTY);
+
+
+
+
+
+
+
+
+
+                    // Get the drops for this block
+                    List<ItemStack> drops = targetState.getBlock().getDroppedStacks(targetState, builder);
+
+                    // Attempt to insert drops into the inventory
+                    for (ItemStack drop : drops) {
+                        for (int i = 0; i < items.size(); i++) {
+                            ItemStack slot = items.get(i);
+
+                            if (slot.isEmpty()) {
+                                items.set(i, drop.copy());
+                                drop.setCount(0);
+                                break;
+                            } else if (ItemStack.canCombine(slot, drop)) {
+                                int space = slot.getMaxCount() - slot.getCount();
+                                int transfer = Math.min(space, drop.getCount());
+
+                                if (transfer > 0) {
+                                    slot.increment(transfer);
+                                    drop.decrement(transfer);
+                                    if (drop.isEmpty()) break;
+                                }
+                            }
+                        }
+                    }
+
+                    // Remove the block from the world
+                    world.removeBlock(next, false);
+
+                }
+
+
+
+
+
+            }
+        }
+        if (!isDoneScanning){
+            Chunk chunk = world.getChunk(pos);
+
+            // Get chunk start positions
+            int startX = chunk.getPos().getStartX();
+            int startZ = chunk.getPos().getStartZ();
+
+            String key;
+            // Loop through all x, y, z in the chunk
+            for (int x = startX; x < startX + 16; x++) {
+                for (int y = world.getBottomY(); y < world.getTopY(); y++) {
+                    for (int z = startZ; z < startZ + 16; z++) {
+                        BlockPos currentPos = new BlockPos(x, y, z);
+                        BlockState blockState = world.getBlockState(currentPos);
+
+                        // Do something with the block
+                        System.out.println("Block at " + currentPos + ": " + blockState.getBlock().getTranslationKey());
+                        key = blockState.getBlock().getTranslationKey();
+                        switch (key) {
+                            case "block.minecraft.coal_ore":
+                            case "block.minecraft.iron_ore":
+                            case "block.minecraft.copper_ore":
+                            case "block.minecraft.gold_ore":
+                            case "block.minecraft.redstone_ore":
+                            case "block.minecraft.lapis_ore":
+                            case "block.minecraft.diamond_ore":
+                            case "block.minecraft.emerald_ore":
+                            case "block.minecraft.deepslate_coal_ore":
+                            case "block.minecraft.deepslate_iron_ore":
+                            case "block.minecraft.deepslate_copper_ore":
+                            case "block.minecraft.deepslate_gold_ore":
+                            case "block.minecraft.deepslate_redstone_ore":
+                            case "block.minecraft.deepslate_lapis_ore":
+                            case "block.minecraft.deepslate_diamond_ore":
+                            case "block.minecraft.deepslate_emerald_ore":
+                            case "block.minecraft.nether_gold_ore":
+                            case "block.minecraft.ancient_debris":
+                                // This block is an ore
+                                blocksToBreak.add(currentPos);
+                                break;
+                            default:
+                                // Not an ore
+                                break;
+                        }
+
+                    }
+                }
+            }
+            this.isDoneScanning = true;
         }
     }
+
+
+
 
 
 
