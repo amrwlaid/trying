@@ -40,7 +40,6 @@ public class MinerBlockEntity extends BlockEntity implements ExtendedScreenHandl
     private final DefaultedList<ItemStack> items = DefaultedList.ofSize(22, ItemStack.EMPTY);
     private boolean isDoneScanning = false;
     private List<BlockPos> blocksToBreak = new ArrayList<>();
-
     private int fuel = 0;
 
     public MinerBlockEntity(BlockPos pos, BlockState state) {
@@ -49,14 +48,21 @@ public class MinerBlockEntity extends BlockEntity implements ExtendedScreenHandl
 
     public void addFuel() {
         ItemStack itemStack = items.get(21);
+        String name =  itemStack.getItem().getName().getString();
         if (!itemStack.isEmpty()&& this.getFuel() < 1000){
-            if (itemStack.isOf(Blocks.REDSTONE_BLOCK.asItem()))fuel += 18;
 
-            else if (itemStack.isOf(Items.REDSTONE)) fuel+=2;
 
-            else if (itemStack.isOf(Items.COAL)) fuel+=1;
+            switch (name){
+                case "Redstone Dust" :fuel+=2;
+                break;
+                case 	"Block of Redstone": fuel+=18;
+                break;
+                case 	"Coal": fuel+=1;
+                break;
+                case 	"Block of Coal": fuel+=9;
+                break;
+            }
 
-            else if (itemStack.isOf(Blocks.COAL_BLOCK.asItem())) fuel+=9;
 
 
 
@@ -92,7 +98,7 @@ public class MinerBlockEntity extends BlockEntity implements ExtendedScreenHandl
         // Load inventory
         Inventories.readNbt(nbt, items);
 
-        // Load your custom fields
+        // Load other stuff
         this.fuel = nbt.getInt("fuel");
     }
 
@@ -107,23 +113,31 @@ public class MinerBlockEntity extends BlockEntity implements ExtendedScreenHandl
 
     public void tick(World world, BlockPos pos, BlockState state) {
         addFuel();
+        BlockPos next;
+        BlockState targetState;
+        LootContextParameterSet.Builder builder;
+        List<ItemStack> drops;
 
         if (!world.isClient && world.getTime() % 20 == 0 && this.fuel>0 && world.isReceivingRedstonePower(pos) && isDoneScanning && !blocksToBreak.isEmpty()) {
-            consumeFuel();
-            if (world instanceof ServerWorld serverWorld) {
+
+            if (world instanceof ServerWorld serverWorld ) {
 
 
 
 
 
                 if (!blocksToBreak.isEmpty()) {
-                    BlockPos next = blocksToBreak.remove(0);
-                    BlockState targetState = world.getBlockState(next);
+                    next = blocksToBreak.remove(0);
+                    targetState = world.getBlockState(next);
+                    if (!(targetState.getBlock() == Blocks.AIR)){
+                        consumeFuel();
+                    }
+
 
 
 
                     // Build the LootContextParameterSet
-                    LootContextParameterSet.Builder builder = new LootContextParameterSet.Builder((ServerWorld) world)
+                    builder = new LootContextParameterSet.Builder((ServerWorld) world)
                             .add(LootContextParameters.ORIGIN, Vec3d.ofCenter(pos))
                             .add(LootContextParameters.TOOL, ItemStack.EMPTY);
 
@@ -136,7 +150,7 @@ public class MinerBlockEntity extends BlockEntity implements ExtendedScreenHandl
 
 
                     // Get the drops for this block
-                    List<ItemStack> drops = targetState.getBlock().getDroppedStacks(targetState, builder);
+                    drops = targetState.getBlock().getDroppedStacks(targetState, builder);
 
                     // Attempt to insert drops into the inventory
                     for (ItemStack drop : drops) {
